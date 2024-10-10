@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários de Teste via REST</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <style>
+        .card {
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .subtitle {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body class="container bg-warning py-4">
+    <h1 class="text-center mb-2">Usuários de Teste via REST</h1>
+    <p class="text-center subtitle">Os usuários deste exemplo são fornecidos pela API de testes reqres.in</p>
+
+    <div id="usuarios" class="container-fluid">
+        <div class="row justify-content-center">
+            <div v-for="(user, index) in users" 
+                 :key="index" 
+                 class="col-md-4 col-lg-3 p-2 m-3">
+                <div class="card">
+                    <img :src="user.avatar" 
+                         class="card-img-top" 
+                         :alt="user.first_name">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">
+                            {{user.first_name}} {{user.last_name}}
+                        </h5>
+                        <p class="card-text">{{user.email}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#usuarios',
+            data() {
+                return {
+                    users: []
+                }
+            },
+            mounted() {
+                this.loadUsers();
+            },
+            methods: {
+                loadUsers() {
+                    fetch('https://reqres.in/api/users?per_page=10')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.users = data.data;
+                        })
+                        .catch(error => {
+                            console.error('Erro ao carregar usuários:', error);
+                        });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
